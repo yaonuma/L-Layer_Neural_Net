@@ -12,7 +12,6 @@ from skimage import transform, io
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import StratifiedKFold
 
-
 TERMCOLOR = True
 if TERMCOLOR:
     from termcolor import colored
@@ -1088,11 +1087,13 @@ def L_layer_model_minibatch_momentum_regularization(X, Y, layers_dims, learning_
     return parameters
 
 
+
 if __name__ == '__main__':
 
     a = time.time()
     print_packages_list()
 
+    # load original dataset
     DATA_FOLDER = 'data/'
     write_h5_images(DATA_FOLDER)
     train_x_orig, train_y, test_x_orig, test_y, classes = load_dataset(DATA_FOLDER)
@@ -1111,10 +1112,11 @@ if __name__ == '__main__':
     train_x_orig = np.concatenate((train_x_orig, images))
     train_y = np.concatenate((train_y, labels), axis=1)
 
+    # initialize hyperparameters
     best_params = {"hl_0": 24, "hl_1": 12, "hl_2": 5, "learning_rate": 0.00075,
                    "mini_batch_size": 32, "beta": 0.9, "_lambda": 0.1}
 
-    # get optimal params
+    # get optimal params with crude, random search
     optimize_best_params = 1
     if optimize_best_params:
 
@@ -1196,6 +1198,7 @@ if __name__ == '__main__':
         print('\nBest ROC_AUC average after', N, 'iterations of KFold Cross Validations:', best_auc_avg)
         print('Best parameters: ', best_params, '\n')
 
+    # use default best_params initialized above
     if not optimize_best_params:
 
         # use defined params
